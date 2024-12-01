@@ -61,7 +61,6 @@ VALUES
 # Analysis:
 
 #1. Categorize companies into different revenue ranges (where high revenue is greater than $500 Billion, medium is between $200 and $499.99 Billion and low revenue is below $200 billion). 
-
 SELECT company_name, revenue,
 CASE WHEN revenue >=500 THEN 'High Revenue'
 WHEN revenue BETWEEN 200 AND 499.99 THEN 'Medium Revenue'
@@ -71,7 +70,6 @@ FROM fortune_companies
 ORDER BY revenue DESC;
 
 #2. Which industries have an average revenue greater than 300 billion AND the total number of employees exceeds 5000. Round revenue to two decimal places.
-
 SELECT industry
 , ROUND(AVG(revenue),2) AS avg_revenue
 , SUM(employees) AS total_employees
@@ -81,7 +79,6 @@ HAVING AVG(revenue) > 300
 AND SUM(employees) > 5000;
 
 #3. Determine average revenue of companies with over 250 billion that offer healthcare benefits and average tenure over 6 years
-
 SELECT company_name, ROUND(AVG(revenue),2) AS avg_revenue
 , AVG(avg_employee_tenure) AS avg_employee_tenure
 FROM fortune_companies
@@ -92,7 +89,6 @@ AND AVG(avg_employee_tenure) >= 6
 ORDER BY ROUND(AVG(revenue),2) DESC;
 
 #4. Identify companies with above average employee tenure and revenue
-
 SELECT company_name, revenue, avg_employee_tenure, 
 CASE WHEN avg_employee_tenure > (SELECT AVG(avg_employee_tenure) FROM fortune_companies)
 AND revenue > (SELECT ROUND(AVG(revenue),2) FROM fortune_companies)
@@ -103,7 +99,6 @@ FROM fortune_companies
 ORDER BY company_performance DESC;
 
 #5. Classify companies into two categories based on maternity leave weeks (greater than 10 being "generous maternity leave"; less than 10 weeks being "standard maternity leave"). 
-
 SELECT company_name, maternity_leave_weeks,
 CASE WHEN maternity_leave_weeks >=10 THEN 'Generous Maternity Leave'
 ELSE 'Standard Maternity Leave'
@@ -112,7 +107,6 @@ FROM fortune_companies
 ORDER BY maternity_leave_weeks DESC;
 
 #6. Which company in the Retail industry has the least revenue, and what's their revenue? 
-
 SELECT company_name, 
 MIN(revenue) AS minimum_revenue
 FROM fortune_companies
