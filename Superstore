@@ -29,44 +29,44 @@ VALUES
 
 #For this project, I used SQL to query the Superstore database to get information about items sold at the store and their prices. 
 
-#Order the items in the database by price (highest to lowest)
+#1. Order the items in the database by price (highest to lowest)
 SELECT *
 FROM superstore
 ORDER BY price DESC
 LIMIT 5;
 
-#Show a statistic about the item prices.
+#2. Show a statistic about the item prices.
 SELECT avg(price)
 FROM superstore;
 
-#Select the max price for the item Robot Vacuum Cleaner
+#3. Select the max price for the item Robot Vacuum Cleaner
 SELECT MAX(price), item_name
 FROM superstore
 WHERE item_name="Robot Vacuum Cleaner";
 
-#Determine the minimum stock quantity for each category
+#4. Determine the minimum stock quantity for each category
 SELECT MIN(stock_quantity), category
 FROM superstore
 GROUP BY category
 ORDER BY MIN(stock_quantity) DESC;
 
-#Determine the total price for each category
+#5. Determine the total price for each category
 SELECT SUM(price), category
 FROM superstore
 GROUP BY category
 ORDER BY SUM(price) DESC;
 
-#Average price in the category Kitchen Supplies
+#6. Determine the average price in the category Kitchen Supplies
 SELECT AVG(price), category
 FROM superstore
 WHERE category="Kitchen Supplies";
 
-#How many air purifiers are in stock?
+#7. How many air purifiers are in stock?
 SELECT SUM(stock_quantity), item_name
 FROM superstore
 WHERE item_name="Air Purifier";
 
-#what is the highest average rating for a Memory Foam Mattress
+#8. what is the highest average rating for a Memory Foam Mattress
 SELECT MAX(average_rating), item_name
 FROM superstore
 WHERE item_name="Memory Foam Mattress";
