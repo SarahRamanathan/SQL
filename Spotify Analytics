@@ -1,0 +1,82 @@
+# For this project, I downloaded Spotify data from Kaggle.
+# I then created a table to insert Spotify data into.
+# Finally, I performed analytics on the data using SQL. 
+
+# Creating the table: 
+CREATE TABLE Spotifydata (
+id integer PRIMARY KEY,
+artist_name varchar NOT NULL,
+track_name varchar NOT NULL,
+track_id varchar NOT NULL,
+popularity integer NOT NULL,
+danceability decimal(4,3) NOT NULL,
+energy decimal(4,3) NOT NULL,
+key integer NOT NULL,
+loudness decimal(5,3) NOT NULL,
+mode integer NOT NULL,
+speechiness decimal(5,4) NOT NULL,
+acousticness decimal(6,5) NOT NULL,
+instrumentalness text NOT NULL,
+liveness decimal(5,4) NOT NULL,
+valence decimal(4,3) NOT NULL,
+tempo decimal(6,3) NOT NULL,
+duration_ms integer NOT NULL,
+time_signature integer NOT NULL 
+)
+
+# I then inserted the Spotify Data .csv into the table.
+# Next, I explored the data using the following SQL. 
+
+# 1. Who are the top 10 most popular artists based on the average popularity of their tracks?
+SELECT artist_name, track_name, AVG(popularity) AS avg_popularity
+FROM SpotifyData
+GROUP BY artist_name
+ORDER BY avg_popularity DESC
+LIMIT 10;
+
+# 2. Determine the longest song for each artist. Which artist from this dataset released the longest song?
+SELECT artist_name, track_name, duration_ms
+FROM SpotifyData
+WHERE (artist_name, duration_ms) IN (
+    SELECT artist_name, MAX(duration_ms)
+    FROM SpotifyData
+    GROUP BY artist_name)
+ORDER BY duration_ms DESC;
+
+# 3. What is the average tempo for the top 10 most popular songs?
+SELECT AVG(tempo) AS avg_tempo
+FROM (
+    SELECT tempo
+    FROM SpotifyData
+    ORDER BY popularity DESC
+    LIMIT 10) 
+AS top_10_songs;
+    
+# 4. Classify songs based on whether they contain instrumentals. Instrumentalness = 0 means no instrumentals (mostly vocal), Instrumentalness >0 means contains instrumentals
+SELECT track_name
+, instrumentalness
+, CASE 
+    WHEN instrumentalness > 0 THEN 'contains intrumentals'
+    ELSE 'no instrumentals'
+  END AS intrumental_category
+FROM SpotifyData
+ORDER BY instrumentalness DESC;
+
+# 5. Classify songs based on danceability (less than 0.5 = low; greater than 0.8 = high, everything else average)
+SELECT track_name
+, danceability
+, CASE
+    WHEN danceability <= 0.5 THEN 'low danceability'
+    WHEN danceability >= 0.8 THEN 'high danceability'
+    ELSE 'average danceability'
+  END AS danceability_category
+FROM SpotifyData
+ORDER BY danceability DESC;
+
+# 6. What is the shortest song and where does it rank in popularity?
+SELECT track_name
+, duration_ms
+, popularity
+FROM SpotifyData
+ORDER BY duration_ms ASC
+LIMIT 1;
