@@ -27,14 +27,14 @@ time_signature integer NOT NULL
 # I then inserted the Spotify Data .csv into the table.
 # Next, I explored the data using the following SQL. 
 
-# 1. Who are the top 10 most popular artists based on the average popularity of their tracks?
+# 1. First I determined who are the top 10 most popular artists based on the average popularity of their tracks.
 SELECT artist_name, track_name, AVG(popularity) AS avg_popularity
 FROM SpotifyData
 GROUP BY artist_name
 ORDER BY avg_popularity DESC
 LIMIT 10;
 
-# 2. Determine the longest song for each artist. Which artist from this dataset released the longest song?
+# 2. Next, I determined the longest song for each artist. 
 SELECT artist_name, track_name, duration_ms
 FROM SpotifyData
 WHERE (artist_name, duration_ms) IN (
@@ -43,7 +43,7 @@ WHERE (artist_name, duration_ms) IN (
     GROUP BY artist_name)
 ORDER BY duration_ms DESC;
 
-# 3. What is the average tempo for the top 10 most popular songs?
+# 3. Next, I determned the average tempo for the top 10 most popular songs.
 SELECT AVG(tempo) AS avg_tempo
 FROM (
     SELECT tempo
@@ -52,7 +52,7 @@ FROM (
     LIMIT 10) 
 AS top_10_songs;
     
-# 4. Classify songs based on whether they contain instrumentals. Instrumentalness = 0 means no instrumentals (mostly vocal), Instrumentalness >0 means contains instrumentals
+# 4. Additionally I classified songs based on whether they contain instrumentals. Instrumentalness = 0 means no instrumentals (mostly vocal), Instrumentalness >0 means contains instrumentals
 SELECT track_name
 , instrumentalness
 , CASE 
@@ -62,7 +62,7 @@ SELECT track_name
 FROM SpotifyData
 ORDER BY instrumentalness DESC;
 
-# 5. Classify songs based on danceability (less than 0.5 = low; greater than 0.8 = high, everything else average)
+# 5. Next, I classified songs based on danceability (less than 0.5 = low; greater than 0.8 = high, everything else average)
 SELECT track_name
 , danceability
 , CASE
@@ -73,7 +73,7 @@ SELECT track_name
 FROM SpotifyData
 ORDER BY danceability DESC;
 
-# 6. What is the shortest song and where does it rank in popularity?
+# 6. Lastly, I determined what the shortest song in the dataset was and noted where it ranks in popularity.
 SELECT track_name
 , duration_ms
 , popularity
