@@ -1,0 +1,158 @@
+# In this SQL, I'm querying a database with multiple tables in it to quantify statistics about a Digital media Store 
+
+# 1. Show Customers (their full names, customer ID, and country) who are not in the US. (Hint: != or <> can be used to say "is not equal to").
+SELECT FirstName
+, Customerid
+, LastName
+, Country
+FROM customers
+WHERE country <> 'USA';
+
+# 2. Show only the Customers from Brazil.
+SELECT *
+FROM Customers
+WHERE country = 'Brazil';
+
+# 3. Find the Invoices of customers who are from Brazil. The resulting table should show the customer's full name, Invoice ID, Date of the invoice, and billing country.
+SELECT cust.FirstName
+, cust.LastName
+, inv.invoiceid
+, inv.InvoiceDate
+, inv.BillingCountry
+FROM Invoices inv
+LEFT JOIN customers cust
+ON inv.customerid = cust.customerid
+WHERE inv.BillingCountry = 'Brazil';
+
+# 4. Show the Employees who are Sales Agents.
+SELECT *
+FROM employees
+WHERE Title LIKE '%sales%agent%';
+
+# 5. Find a unique/distinct list of billing countries from the Invoice table.
+SELECT DISTINCT BillingCountry
+FROM Invoices;
+
+# 6. Provide a query that shows the invoices associated with each sales agent. The resulting table should include the Sales Agent's full name.
+SELECT emp.FirstName
+, emp.LastName
+, inv.invoiceid
+FROM employees emp
+JOIN customers cust
+ON emp.employeeid = cust.supportrepid
+
+JOIN invoices inv
+ON cust.customerid = inv.customerid;
+
+# 7. Show the Invoice Total, Customer name, Country, and Sales Agent name for all invoices and customers.
+SELECT inv.total
+, cust.FirstName AS cust_first_name
+, cust.LastName AS cust_last_name
+, cust.Country
+, emp.firstname AS Sales_Agent_FN
+, emp.lastname AS Sales_Agent_LN
+FROM employees emp
+JOIN customers cust
+ON emp.employeeid = cust.supportrepid
+
+JOIN invoices inv
+ON cust.customerid = inv.customerid;
+
+# 8. How many Invoices were there in 2009?
+SELECT COUNT(*)
+FROM invoices
+WHERE InvoiceDate LIKE '%2009%';
+
+# 9. What are the total sales for 2009?
+SELECT SUM(Total)
+FROM invoices
+WHERE InvoiceDate LIKE '%2009%';
+
+# 10. Write a query that includes the purchased track name with each invoice line ID.
+SELECT tr.name AS Track_name
+, i.InvoiceLineID
+FROM invoice_items i
+INNER JOIN tracks tr
+ON tr.trackid = i.trackid;
+
+# 11. Write a query that includes the purchased track name AND artist name with each invoice line ID.
+SELECT tr.name AS track_name
+, art.name AS artist_name
+, i.InvoiceLineID
+FROM invoice_items i
+LEFT JOIN tracks tr
+ON i.trackid = tr.trackid
+
+INNER JOIN albums al
+ON tr.albumid = al.albumid
+
+LEFT JOIN artists art
+ON al.artistid = art.artistid;
+
+# 12. Provide a query that shows all the Tracks, and include the Album name, Media type, and Genre.
+SELECT tr.name AS track_name
+, al.title AS album_name
+, mt.name AS media_type
+, gen.name AS genre
+FROM tracks tr
+JOIN albums al
+ON tr.albumid = al.albumid
+JOIN media_types mt
+ON mt.MediaTypeID = tr.MediaTypeID
+JOIN genres gen
+ON gen.genreid = tr.genreid;
+
+# 13. Show the total sales made by each sales agent.
+SELECT emp.FirstName
+, emp.LastName
+, SUM(inv.total) AS total_sales
+FROM employees emp
+JOIN customers cust
+ON emp.employeeid = cust.supportrepid
+
+JOIN invoices inv
+ON cust.customerid = inv.customerid
+WHERE emp.title LIKE '%sales%agent%'
+GROUP BY emp.FirstName, emp.LastName;
+
+# 14. Which sales agent made the most dollars in sales in 2009?
+SELECT emp.FirstName
+, emp.LastName
+, SUM(inv.total) AS total_sales
+FROM employees emp
+JOIN customers cust
+ON emp.employeeid = cust.supportrepid
+
+JOIN invoices inv
+ON cust.customerid = inv.customerid
+WHERE emp.title LIKE '%sales%agent%'
+AND inv.invoiceDate LIKE '2009%'
+GROUP BY emp.FirstName, emp.LastName
+ORDER BY SUM(inv.total) DESC
+LIMIT 1;
+
+# 15. Which employee assisted Astrid Gruber with their purchase and what position did they hold
+SELECT emp.employeeid
+,emp.FirstName
+,emp.LastName
+,emp.Title
+FROM employees emp
+INNER JOIN customers cust
+ON emp.employeeid = cust.SupportRepid
+WHERE cust.FirstName = 'Astrid'
+AND cust.LastName = 'Gruber';
+
+# 16. What genre of music does Angus Young compose?
+SELECT gen.name
+FROM genres gen
+INNER JOIN tracks tr
+ON gen.genreid = tr.genreid
+WHERE tr.composer LIKE '%angus young%';
+
+# 17. Which artist wrote the album "Mezmerize"
+SELECT art.name
+FROM artists art
+INNER JOIN albums al
+ON art.artistid = al.artistid
+WHERE al.title = 'Mezmerize';
+
